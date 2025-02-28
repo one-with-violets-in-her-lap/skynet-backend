@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "skynet-backend"
+version = "0.1.0"
+description = ""
+authors = []
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+g4f = "^0.4.7.5"
+pydantic-settings = "^2.8.1"
+websockets = "^15.0"
+pydantic = "^2.10.6"
+
+
+[tool.poetry.group.dev.dependencies]
+pylint = "^3.3.4"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
