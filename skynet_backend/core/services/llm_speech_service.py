@@ -20,4 +20,6 @@ class LlmSpeechService:
                 detail="LLM API response is empty (no choices " + "with completions)"
             )
 
-        return response.choices[0].message
+        message = response.choices[0].message
+
+        return LlmMessage(role=message.role, content=message.content)
