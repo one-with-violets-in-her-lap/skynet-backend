@@ -9,12 +9,14 @@ readme = "README.md"
 python = "^3.10"
 g4f = "^0.4.7.5"
 pydantic-settings = "^2.8.1"
-websockets = "^15.0"
 pydantic = "^2.10.6"
+python-socketio = {extras = ["asyncio"], version = "^5.12.1"}
+uvicorn = "^0.34.0"
 
 
 [tool.poetry.group.dev.dependencies]
 pylint = "^3.3.4"
+black = "^25.1.0"
 
 [build-system]
 requires = ["poetry-core"]
