@@ -1,7 +1,6 @@
 import logging
 
-from skynet_backend.api_clients.lazypy.models import LazypyVoice
-from skynet_backend.core.models.llm_message import LlmMessage
+from skynet_backend.core.models.llm_message import LlmMessageWithSpeech
 from skynet_backend.websockets_api.dependencies import (
     initialize_api_dependencies,
 )
@@ -12,13 +11,15 @@ logger = logging.getLogger(__name__)
 
 
 async def handle_start_llm_conversation(sid: str, _):
+    async def send_new_llm_message_to_client(new_llm_message: LlmMessageWithSpeech):
+        await socketio_server.emit("new-llm-message", data=new_llm_message.model_dump())
+
     logger.info("LLM conversation start event with sid: %s", sid)
 
     app_dependencies = initialize_api_dependencies()
 
-    llm_message = await app_dependencies.llm_speech_service.get_llm_speech_reply(
-        [LlmMessage(role="user", content="What is a horizon?")],
-        text_to_speech_voice=LazypyVoice.BRIAN,
+    await app_dependencies.llm_conversation_service.start_llm_conversation(
+        send_new_llm_message_to_client
     )
 
-    await socketio_server.emit("new-llm-message", data=llm_message.model_dump())
+    await socketio_server.emit("llm-conversation-end")
