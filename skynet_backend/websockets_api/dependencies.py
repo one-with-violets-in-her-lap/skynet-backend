@@ -39,6 +39,7 @@ async def initialize_api_dependencies():
 
     logger.info("Initializing dependencies")
 
+    # TODO: rewrite with async `ExitStack``
     for dependency in dependencies_with_context_managers:
         await dependency.__aenter__()
 
