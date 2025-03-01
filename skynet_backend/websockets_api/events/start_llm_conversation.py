@@ -12,7 +12,13 @@ logger = logging.getLogger(__name__)
 
 async def handle_start_llm_conversation(sid: str, _):
     async def send_new_llm_message_to_client(new_llm_message: LlmMessageWithSpeech):
-        await socketio_server.emit("new-llm-message", data=new_llm_message.model_dump())
+        await socketio_server.emit(
+            "new-llm-message",
+            data=(
+                new_llm_message.speech_audio_data,
+                new_llm_message.model_dump(exclude={"speech_audio_data"}),
+            ),
+        )
 
     logger.info("LLM conversation start event with sid: %s", sid)
 

@@ -12,4 +12,4 @@ class LlmMessage(BaseModel):
 
 
 class LlmMessageWithSpeech(LlmMessage):
-    speech_audio_url: str
+    speech_audio_data: bytes

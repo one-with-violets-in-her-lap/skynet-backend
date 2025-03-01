@@ -1,9 +1,14 @@
+import logging
 import g4f
+import httpx
 
 from skynet_backend.api_clients.lazypy.client import LazypyTextToSpeechClient
 from skynet_backend.api_clients.lazypy.models import LazypyVoice
 from skynet_backend.common_errors import ExternalApiError
 from skynet_backend.core.models.llm_message import LlmMessage, LlmMessageWithSpeech
+
+
+logger = logging.getLogger(__name__)
 
 
 class LlmSpeechService:
@@ -38,8 +43,26 @@ class LlmSpeechService:
             )
         )
 
+        logger.info("Text to speech operation completed, fetching audio data...")
+
+        speech_audio_data = await self._fetch_speech_audio_data(
+            text_to_speech_result.audio_url
+        )
+
         return LlmMessageWithSpeech(
             role=message.role,
             content=message.content,
-            speech_audio_url=text_to_speech_result.audio_url,
+            speech_audio_data=speech_audio_data,
         )
+
+    async def _fetch_speech_audio_data(self, audio_file_url: str):
+        async with httpx.AsyncClient() as httpx_client:
+            response = await httpx_client.get(audio_file_url)
+
+            if response.is_error:
+                raise ExternalApiError(
+                    status_code=response.status_code,
+                    detail="Failed to fetch speech audio data from lazypy API",
+                )
+
+            return response.read()
