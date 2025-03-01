@@ -23,56 +23,60 @@ logger = logging.getLogger(__name__)
 
 
 class LazypyTextToSpeechClient:
+    async def __aenter__(self):
+        self.httpx_client = httpx.AsyncClient(base_url=_LAZYPY_API_BASE_URL)
+        return self
+
+    async def __aexit__(self, *args):
+        await self.httpx_client.aclose()
+
     async def fetch_speech_from_text(
         self, text: str, voice: LazypyVoice = LazypyVoice.BRIAN
     ):
-        async with httpx.AsyncClient(base_url=_LAZYPY_API_BASE_URL) as httpx_client:
-            form_urlencoded_body = urllib.parse.urlencode(
-                {"service": "StreamElements", "voice": voice.value, "text": text}
-            )
+        form_urlencoded_body = urllib.parse.urlencode(
+            {"service": "StreamElements", "voice": voice.value, "text": text}
+        )
 
-            response = await httpx_client.post(
-                "/tts/request_tts.php",
-                headers={
-                    "Accept": "*/*",
-                    "Accept-Language": "en-US,en;q=0.6",
-                    "Content-Type": "application/x-www-form-urlencoded",
-                    "Origin": _LAZYPY_API_BASE_URL,
-                    "Referer": _LAZYPY_API_BASE_URL,
-                    "User-agent": _FAKE_USER_AGENT,
-                },
-                content=form_urlencoded_body,
-            )
+        response = await self.httpx_client.post(
+            "/tts/request_tts.php",
+            headers={
+                "Accept": "*/*",
+                "Accept-Language": "en-US,en;q=0.6",
+                "Content-Type": "application/x-www-form-urlencoded",
+                "Origin": _LAZYPY_API_BASE_URL,
+                "Referer": _LAZYPY_API_BASE_URL,
+                "User-agent": _FAKE_USER_AGENT,
+            },
+            content=form_urlencoded_body,
+        )
 
-            if response.is_error:
+        if response.is_error:
+            logger.error("Lazypy API returned an error. Trying to get error details...")
+
+            error_detail = _DEFAULT_ERROR_MESSAGE
+
+            try:
+                error_detail += f". More info: {response.json()}"
+            except json.JSONDecodeError:
                 logger.error(
-                    "Lazypy API returned an error. Trying to get error details..."
+                    "Lazypy API error does not contain any info. It's just a "
+                    + "4xx/5xx status code"
                 )
 
-                error_detail = _DEFAULT_ERROR_MESSAGE
+            raise ExternalApiError(
+                status_code=response.status_code, detail=error_detail
+            )
 
-                try:
-                    error_detail += f". More info: {response.json()}"
-                except json.JSONDecodeError:
-                    logger.error(
-                        "Lazypy API error does not contain any info. It's just a "
-                        + "4xx/5xx status code"
-                    )
+        result = LazypyTextToSpeechResult.model_validate(response.json())
 
-                raise ExternalApiError(
-                    status_code=response.status_code, detail=error_detail
-                )
+        if result.audio_url is None:
+            error_detail = _DEFAULT_ERROR_MESSAGE
 
-            result = LazypyTextToSpeechResult.model_validate(response.json())
+            if result.error_msg is not None:
+                error_detail += f". More info: {result.error_msg}"
 
-            if result.audio_url is None:
-                error_detail = _DEFAULT_ERROR_MESSAGE
+            raise ExternalApiError(
+                status_code=response.status_code, detail=error_detail
+            )
 
-                if result.error_msg is not None:
-                    error_detail += f". More info: {result.error_msg}"
-
-                raise ExternalApiError(
-                    status_code=response.status_code, detail=error_detail
-                )
-
-            return LazypyTextToSpeechSuccessResult.model_validate(result.model_dump())
+        return LazypyTextToSpeechSuccessResult.model_validate(result.model_dump())

@@ -4,7 +4,7 @@ from pydantic import BaseModel
 
 
 class LlmMessage(BaseModel):
-    role: Literal["user", "assistant"]
+    role: Literal["user", "assistant", "system"]
     content: str
 
     def __str__(self):

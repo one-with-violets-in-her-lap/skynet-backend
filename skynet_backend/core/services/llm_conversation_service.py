@@ -13,7 +13,7 @@ ENTRYPOINT_MESSAGE = LlmMessage(
 )
 
 MASTER_PROMPT = LlmMessage(
-    role="user",
+    role="system",
     content='Do not ask "Can I help you with something other?" or similar '
     + "questions. Try to maintain the conversation proactively with me. And "
     + "please respond in a short form, like 1-2 sentences",
