@@ -3,6 +3,11 @@ import logging
 from typing import Any, Callable, Literal
 
 from skynet_backend.api_clients.lazypy.models import LazypyVoice
+from skynet_backend.core.models.llm_conversation import (
+    ConversationParticipantModelName,
+    LlmConversationMessage,
+    get_opposite_model_name,
+)
 from skynet_backend.core.models.llm_message import LlmMessage, LlmMessageWithSpeech
 from skynet_backend.core.services.llm_speech_service import LlmSpeechService
 
@@ -20,9 +25,6 @@ MASTER_PROMPT = LlmMessage(
 )
 
 
-ModelIdentifier = Literal[1, 2]
-
-
 logger = logging.getLogger(__name__)
 
 
@@ -32,19 +34,23 @@ class LlmConversationService:
 
     async def start_llm_conversation(
         self,
-        handle_new_message: Callable[[LlmMessageWithSpeech], Any],
+        handle_new_message: Callable[[LlmConversationMessage], Any],
         max_conversation_messages_count=10,
     ):
         conversation_id = round(datetime.now().timestamp())
 
-        current_model_talking: ModelIdentifier = 1
-        models_voices: dict[ModelIdentifier, LazypyVoice] = {
-            1: LazypyVoice.BRIAN,
-            2: LazypyVoice.JOEY,
+        current_model_talking: ConversationParticipantModelName = "model-1"
+
+        models_voices: dict[ConversationParticipantModelName, LazypyVoice] = {
+            "model-1": LazypyVoice.BRIAN,
+            "model-2": LazypyVoice.JOEY,
         }
-        models_message_histories: dict[ModelIdentifier, list[LlmMessage]] = {
-            1: [MASTER_PROMPT, ENTRYPOINT_MESSAGE],
-            2: [MASTER_PROMPT],
+
+        models_message_histories: dict[
+            ConversationParticipantModelName, list[LlmMessage]
+        ] = {
+            "model-1": [MASTER_PROMPT, ENTRYPOINT_MESSAGE],
+            "model-2": [MASTER_PROMPT],
         }
 
         logger.info("<%s> AI conversation started", conversation_id)
@@ -58,18 +64,17 @@ class LlmConversationService:
                 current_model_talking
             ]
 
-            # logger.info(
-            #     "<%s> Model %s message history: %s",
-            #     conversation_id,
-            #     str(current_model_talking),
-            #     current_model_message_history,
-            # )
-
             new_message = await self.llm_speech_service.get_llm_speech_reply(
                 current_model_message_history,
                 text_to_speech_voice=models_voices[current_model_talking],
             )
-            await handle_new_message(new_message)
+
+            new_llm_conversation_message = LlmConversationMessage(
+                content=new_message.content,
+                speech_audio_data=new_message.speech_audio_data,
+                from_which_model=current_model_talking,
+            )
+            await handle_new_message(new_llm_conversation_message)
 
             logger.info(
                 '<%s> Model %s said (message %s): "%s"',
@@ -80,9 +85,11 @@ class LlmConversationService:
             )
 
             # Toggles between 1st and 2nd model
-            next_model_that_replies = 1 if current_model_talking == 2 else 2
+            next_model_that_replies = get_opposite_model_name(current_model_talking)
 
             models_message_histories[next_model_that_replies].append(
+                # Puts AI model response in other model's message history as a
+                # user message
                 LlmMessage(role="user", content=new_message.content)
             )
 
