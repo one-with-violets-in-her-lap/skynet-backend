@@ -17,8 +17,8 @@ async def handle_start_llm_conversation(connection_id: str, _=None):
         await socketio_server.emit(
             "new-llm-message",
             data=(
-                new_llm_message.speech_audio_data,
                 new_llm_message.model_dump(exclude={"speech_audio_data"}),
+                new_llm_message.speech_audio_data,
             ),
             to=connection_id,
         )
