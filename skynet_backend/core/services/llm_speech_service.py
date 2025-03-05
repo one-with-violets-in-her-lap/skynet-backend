@@ -21,7 +21,7 @@ class LlmSpeechService:
         self.lazypy_text_to_speech_client = lazypy_text_to_speech_client
 
     async def get_llm_speech_reply(
-        self, message_history: list[LlmMessage], text_to_speech_voice=LazypyVoice.BRIAN
+        self, message_history: list[LlmMessage], text_to_speech_voice=LazypyVoice.EN_UK_003
     ):
         response = await self.g4f_client.chat.completions.create(
             model="gpt-4o-mini",

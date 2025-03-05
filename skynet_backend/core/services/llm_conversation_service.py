@@ -42,8 +42,8 @@ class LlmConversationService:
         current_model_talking: ConversationParticipantModelName = "model-1"
 
         models_voices: dict[ConversationParticipantModelName, LazypyVoice] = {
-            "model-1": LazypyVoice.BRIAN,
-            "model-2": LazypyVoice.JOEY,
+            "model-1": LazypyVoice.EN_UK_003,
+            "model-2": LazypyVoice.EN_US_010,
         }
 
         models_message_histories: dict[

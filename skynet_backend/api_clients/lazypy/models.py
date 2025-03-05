@@ -5,8 +5,8 @@ from pydantic import BaseModel
 
 
 class LazypyVoice(Enum):
-    BRIAN = "Brian"
-    JOEY = "Joey"
+    EN_UK_003 = "en_uk_003"
+    EN_US_010 = "en_us_010"
 
 
 class LazypyTextToSpeechResult(BaseModel):

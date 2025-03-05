@@ -31,10 +31,10 @@ class LazypyTextToSpeechClient:
         await self.httpx_client.aclose()
 
     async def fetch_speech_from_text(
-        self, text: str, voice: LazypyVoice = LazypyVoice.BRIAN
+        self, text: str, voice: LazypyVoice = LazypyVoice.EN_UK_003
     ):
         form_urlencoded_body = urllib.parse.urlencode(
-            {"service": "StreamElements", "voice": voice.value, "text": text}
+            {"service": "TikTok", "voice": voice.value, "text": text}
         )
 
         response = await self.httpx_client.post(
