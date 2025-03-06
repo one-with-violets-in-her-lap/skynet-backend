@@ -5,6 +5,9 @@ description = ""
 authors = []
 readme = "README.md"
 
+[tool.poetry.scripts]
+websockets-api = "skynet_backend.websockets_api.main:main"
+
 [tool.poetry.dependencies]
 python = "^3.10"
 g4f = "^0.4.7.5"
