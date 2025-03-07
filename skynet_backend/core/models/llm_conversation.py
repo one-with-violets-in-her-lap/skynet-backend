@@ -6,7 +6,9 @@ from pydantic import BaseModel
 ConversationParticipantModelName = Literal["model-1", "model-2"]
 
 
-def get_opposite_model_name(current_talking_model_name: ConversationParticipantModelName) -> ConversationParticipantModelName:
+def get_opposite_model_name(
+    current_talking_model_name: ConversationParticipantModelName,
+) -> ConversationParticipantModelName:
     if current_talking_model_name == "model-1":
         return "model-2"
     else:

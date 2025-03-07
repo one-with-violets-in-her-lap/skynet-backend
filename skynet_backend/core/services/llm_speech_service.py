@@ -38,7 +38,7 @@ class LlmSpeechService:
 
         message = response.choices[0].message
 
-        logger.debug('LLM response is %s chars long', len(message.content))
+        logger.debug("LLM response is %s chars long", len(message.content))
 
         text_to_speech_result = (
             await self.lazypy_text_to_speech_client.fetch_speech_from_text(
