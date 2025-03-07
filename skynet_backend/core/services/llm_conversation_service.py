@@ -1,6 +1,6 @@
 from datetime import datetime
 import logging
-from typing import Any, Callable, Literal
+from typing import Any, Callable
 
 from skynet_backend.api_clients.lazypy.models import LazypyVoice
 from skynet_backend.core.models.llm_conversation import (
@@ -8,7 +8,7 @@ from skynet_backend.core.models.llm_conversation import (
     LlmConversationMessage,
     get_opposite_model_name,
 )
-from skynet_backend.core.models.llm_message import LlmMessage, LlmMessageWithSpeech
+from skynet_backend.core.models.llm_message import LlmMessage
 from skynet_backend.core.services.llm_speech_service import LlmSpeechService
 
 
