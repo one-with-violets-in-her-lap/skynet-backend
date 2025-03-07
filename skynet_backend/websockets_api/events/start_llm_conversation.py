@@ -29,3 +29,5 @@ async def handle_start_llm_conversation(connection_id: str, _=None):
         send_new_llm_message_to_client,
     )
     await socketio_server.emit("llm-conversation-end", to=connection_id)
+
+    await socketio_server.disconnect(connection_id)
