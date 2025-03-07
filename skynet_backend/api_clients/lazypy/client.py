@@ -48,7 +48,7 @@ class LazypyTextToSpeechClient:
                 "User-agent": _FAKE_USER_AGENT,
             },
             content=form_urlencoded_body,
-            timeout=20,
+            timeout=24,
         )
 
         if response.is_error:
