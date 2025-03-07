@@ -55,7 +55,7 @@ class LlmConversationService:
 
         logger.info("<%s> AI conversation started", conversation_id)
 
-        for message_number in range(max_conversation_messages_count + 1):
+        for message_number in range(1, max_conversation_messages_count + 1):
             logger.info(
                 "<%s> Model %s is talking", conversation_id, str(current_model_talking)
             )
