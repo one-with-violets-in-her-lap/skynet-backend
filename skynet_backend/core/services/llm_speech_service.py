@@ -21,13 +21,14 @@ class LlmSpeechService:
         self.lazypy_text_to_speech_client = lazypy_text_to_speech_client
 
     async def get_llm_speech_reply(
-        self, message_history: list[LlmMessage], text_to_speech_voice=LazypyVoice.EN_UK_003
+        self,
+        message_history: list[LlmMessage],
+        text_to_speech_voice=LazypyVoice.EN_UK_003,
     ):
         response = await self.g4f_client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[message.model_dump() for message in message_history],
             web_search=False,
-            max_tokens=30,
         )
 
         if len(response.choices) < 1:
