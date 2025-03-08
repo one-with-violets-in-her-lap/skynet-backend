@@ -21,7 +21,7 @@ class ApiDependencies:
     llm_conversation_service: LlmConversationService
 
 
-async def get_api_dependencies_for_connection(connection_id: str):
+async def get_api_dependencies_for_connection(connection_id: str) -> ApiDependencies:
     session = await socketio_server.get_session(connection_id)
     return session["dependencies"]
 
