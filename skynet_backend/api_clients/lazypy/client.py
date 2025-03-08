@@ -24,7 +24,11 @@ logger = logging.getLogger(__name__)
 
 class LazypyTextToSpeechClient:
     async def __aenter__(self):
-        self.httpx_client = httpx.AsyncClient(base_url=_LAZYPY_API_BASE_URL)
+        httpx_transport_with_retries = httpx.AsyncHTTPTransport(retries=2)
+        self.httpx_client = httpx.AsyncClient(
+            base_url=_LAZYPY_API_BASE_URL, transport=httpx_transport_with_retries
+        )
+
         return self
 
     async def __aexit__(self, *args):
