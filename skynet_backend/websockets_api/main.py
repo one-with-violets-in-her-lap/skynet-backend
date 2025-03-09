@@ -12,7 +12,10 @@ def main():
 
     root_logger.info("Starting Socket.io server via uvicorn")
     uvicorn.run(
-        socketio.ASGIApp(socketio_server),
+        socketio.ASGIApp(
+            socketio_server,
+            static_files={"/public": "./public"},
+        ),
         host=websockets_api_config.host,
         port=websockets_api_config.port,
     )
