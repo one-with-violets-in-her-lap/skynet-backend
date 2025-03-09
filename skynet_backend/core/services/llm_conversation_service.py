@@ -21,7 +21,7 @@ MASTER_PROMPT = LlmMessage(
     role="system",
     content='Do not ask "Can I help you with something other?" or similar '
     + "questions. Try to maintain the conversation proactively. Also find "
-    + "interesting and unusual topics to talk about. And "
+    + "random topics to talk about. And "
     + "respond in short form, no more than 20 words.",
 )
 
