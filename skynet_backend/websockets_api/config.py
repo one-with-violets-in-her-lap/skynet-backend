@@ -18,6 +18,9 @@ class WebsocketsApiConfig(BaseSettings):
         extra="ignore",
     )
 
+    host: str = '0.0.0.0'
+    port: int = 8000
+
     cors_allowed_origins: list[str]
 
     @staticmethod
