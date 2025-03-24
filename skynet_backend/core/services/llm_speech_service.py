@@ -1,3 +1,4 @@
+import io
 import logging
 import os
 import timeit
@@ -45,28 +46,26 @@ class LlmSpeechService:
 
         logger.debug("LLM response is %s chars long", len(message.content))
 
+        # TODO: wrap TTS in asyncio-friendly wrapper (`run_in_executor`)
         text_to_speech_start_time_seconds = timeit.default_timer()
 
         piper = PiperVoice.load("./en_US-lessac-medium.onnx")
 
-        temporary_wav_file_path = f"./{uuid.uuid4()}.wav"
+        audio_buffer = io.BytesIO()
+        with wave.open(audio_buffer, mode="w") as wav_buffer_write_stream:
+            piper.synthesize(message.content, wav_buffer_write_stream)
 
-        with wave.open(temporary_wav_file_path, mode="w") as wav_file_stream:
-            piper.synthesize(message.content, wav_file_stream)
-
-        with open(temporary_wav_file_path, mode="rb") as wav_file_read_stream:
-            speech_audio_data = wav_file_read_stream.read()
+        speech_audio_data = audio_buffer.getvalue()
 
         text_to_speech_seconds_elapsed = (
             timeit.default_timer() - text_to_speech_start_time_seconds
         )
 
-        os.remove(temporary_wav_file_path)
-
         logger.info(
             "Text to speech operation completed. %s seconds spent",
             str(text_to_speech_seconds_elapsed),
         )
+        # The end of TTS
 
         return LlmMessageWithSpeech(
             role=message.role,
