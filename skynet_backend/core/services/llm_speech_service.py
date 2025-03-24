@@ -1,6 +1,12 @@
 import logging
+import os
+import timeit
+import uuid
+import wave
+
 import g4f
 import httpx
+from piper import PiperVoice
 
 from skynet_backend.api_clients.lazypy.client import LazypyTextToSpeechClient
 from skynet_backend.api_clients.lazypy.models import LazypyVoice
@@ -18,7 +24,6 @@ class LlmSpeechService:
         lazypy_text_to_speech_client: LazypyTextToSpeechClient,
     ):
         self.g4f_client = g4f_client
-        self.lazypy_text_to_speech_client = lazypy_text_to_speech_client
 
     async def get_llm_speech_reply(
         self,
@@ -40,16 +45,27 @@ class LlmSpeechService:
 
         logger.debug("LLM response is %s chars long", len(message.content))
 
-        text_to_speech_result = (
-            await self.lazypy_text_to_speech_client.fetch_speech_from_text(
-                message.content, voice=text_to_speech_voice
-            )
+        text_to_speech_start_time_seconds = timeit.default_timer()
+
+        piper = PiperVoice.load("./en_US-lessac-medium.onnx")
+
+        temporary_wav_file_path = f"./{uuid.uuid4()}.wav"
+
+        with wave.open(temporary_wav_file_path, mode="w") as wav_file_stream:
+            piper.synthesize(message.content, wav_file_stream)
+
+        with open(temporary_wav_file_path, mode="rb") as wav_file_read_stream:
+            speech_audio_data = wav_file_read_stream.read()
+
+        text_to_speech_seconds_elapsed = (
+            timeit.default_timer() - text_to_speech_start_time_seconds
         )
 
-        logger.info("Text to speech operation completed, fetching audio data...")
+        os.remove(temporary_wav_file_path)
 
-        speech_audio_data = await self._fetch_speech_audio_data(
-            text_to_speech_result.audio_url
+        logger.info(
+            "Text to speech operation completed. %s seconds spent",
+            str(text_to_speech_seconds_elapsed),
         )
 
         return LlmMessageWithSpeech(
