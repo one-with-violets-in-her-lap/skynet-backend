@@ -31,7 +31,7 @@ class PiperTTSModelsNotLoadedError(Exception):
         )
 
 
-loaded_piper_tts_models: Optional[dict[PiperVoiceName, PiperVoice]] = None
+_loaded_piper_tts_models: Optional[dict[PiperVoiceName, PiperVoice]] = None
 
 
 def ensure_piper_tts_models_downloaded():
@@ -68,14 +68,14 @@ def load_piper_tts_models():
         Dictionary with model names enums as keys and Piper instances as values
     """
 
-    global loaded_piper_tts_models
+    global _loaded_piper_tts_models
 
-    loaded_piper_tts_models = {
+    _loaded_piper_tts_models = {
         voice: PiperVoice.load(f"{DOWNLOAD_DIRECTORY_PATH}/{voice.value}.onnx")
         for voice in PiperVoiceName
     }
 
-    return loaded_piper_tts_models
+    return _loaded_piper_tts_models
 
 
 def get_loaded_piper_tts_models():
@@ -90,7 +90,7 @@ def get_loaded_piper_tts_models():
         Dictionary with model names enums as keys and Piper instances as values
     """
 
-    if loaded_piper_tts_models is None:
+    if _loaded_piper_tts_models is None:
         raise PiperTTSModelsNotLoadedError()
 
-    return loaded_piper_tts_models
+    return _loaded_piper_tts_models
