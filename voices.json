@@ -1,0 +1,64 @@
+{
+    "en_US-john-medium": {
+        "key": "en_US-john-medium",
+        "name": "john",
+        "language": {
+            "code": "en_US",
+            "family": "en",
+            "region": "US",
+            "name_native": "English",
+            "name_english": "English",
+            "country_english": "United States"
+        },
+        "quality": "medium",
+        "num_speakers": 1,
+        "speaker_id_map": {},
+        "files": {
+            "en/en_US/john/medium/en_US-john-medium.onnx": {
+                "size_bytes": 63531379,
+                "md5_digest": "70480857f21f2560f3a232722023b36d"
+            },
+            "en/en_US/john/medium/en_US-john-medium.onnx.json": {
+                "size_bytes": 4965,
+                "md5_digest": "f2d04611b498e14d394385d1ec8a2d2d"
+            },
+            "en/en_US/john/medium/MODEL_CARD": {
+                "size_bytes": 498,
+                "md5_digest": "4ef938585cf2cc8da4ada9b6d2c579ec"
+            }
+        },
+        "aliases": []
+    },
+    "en_US-lessac-medium": {
+        "key": "en_US-lessac-medium",
+        "name": "lessac",
+        "language": {
+            "code": "en_US",
+            "family": "en",
+            "region": "US",
+            "name_native": "English",
+            "name_english": "English",
+            "country_english": "United States"
+        },
+        "quality": "medium",
+        "num_speakers": 1,
+        "speaker_id_map": {},
+        "files": {
+            "en/en_US/lessac/medium/en_US-lessac-medium.onnx": {
+                "size_bytes": 63201294,
+                "md5_digest": "2fc642b535197b6305c7c8f92dc8b24f"
+            },
+            "en/en_US/lessac/medium/en_US-lessac-medium.onnx.json": {
+                "size_bytes": 4885,
+                "md5_digest": "c1f2b7bddefe113f3255ff9ef234cfd3"
+            },
+            "en/en_US/lessac/medium/MODEL_CARD": {
+                "size_bytes": 351,
+                "md5_digest": "42f2dd4a98149e12fc70b301d9579dfd"
+            }
+        },
+        "aliases": [
+            "en-us-lessac-medium"
+        ]
+    }
+}

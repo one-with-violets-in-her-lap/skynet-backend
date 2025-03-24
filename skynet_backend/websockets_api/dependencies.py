@@ -9,6 +9,7 @@ import g4f
 from skynet_backend.api_clients.lazypy.client import LazypyTextToSpeechClient
 from skynet_backend.core.services.llm_conversation_service import LlmConversationService
 from skynet_backend.core.services.llm_speech_service import LlmSpeechService
+from skynet_backend.piper_tts import get_loaded_piper_tts_models
 from skynet_backend.websockets_api.socketio_server import socketio_server
 
 
@@ -31,8 +32,7 @@ async def initialize_api_dependencies_in_socketio_session(connection_id: str, *_
     g4f_client = g4f.AsyncClient()
 
     llm_speech_service = LlmSpeechService(
-        g4f_client=g4f_client,
-        lazypy_text_to_speech_client=lazypy_text_to_speech_client,
+        g4f_client=g4f_client, piper_tts_models=get_loaded_piper_tts_models()
     )
 
     llm_conversation_service = LlmConversationService(llm_speech_service)

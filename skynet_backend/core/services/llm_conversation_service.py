@@ -66,8 +66,7 @@ class LlmConversationService:
             ]
 
             new_message = await self.llm_speech_service.get_llm_speech_reply(
-                current_model_message_history,
-                text_to_speech_voice=models_voices[current_model_talking],
+                current_model_message_history
             )
 
             new_llm_conversation_message = LlmConversationMessage(

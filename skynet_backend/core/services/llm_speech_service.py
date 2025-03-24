@@ -7,10 +7,10 @@ import wave
 
 import g4f
 import httpx
+
 from piper import PiperVoice
 
-from skynet_backend.api_clients.lazypy.client import LazypyTextToSpeechClient
-from skynet_backend.api_clients.lazypy.models import LazypyVoice
+from skynet_backend.piper_tts import PiperVoiceName
 from skynet_backend.common_errors import ExternalApiError
 from skynet_backend.core.models.llm_message import LlmMessage, LlmMessageWithSpeech
 
@@ -22,14 +22,14 @@ class LlmSpeechService:
     def __init__(
         self,
         g4f_client: g4f.AsyncClient,
-        lazypy_text_to_speech_client: LazypyTextToSpeechClient,
+        piper_tts_models: dict[PiperVoiceName, PiperVoice],
     ):
         self.g4f_client = g4f_client
+        self.piper_tts_models = piper_tts_models
 
     async def get_llm_speech_reply(
         self,
         message_history: list[LlmMessage],
-        text_to_speech_voice=LazypyVoice.EN_UK_003,
     ):
         response = await self.g4f_client.chat.completions.create(
             model="gpt-4o-mini",
@@ -49,11 +49,11 @@ class LlmSpeechService:
         # TODO: wrap TTS in asyncio-friendly wrapper (`run_in_executor`)
         text_to_speech_start_time_seconds = timeit.default_timer()
 
-        piper = PiperVoice.load("./en_US-lessac-medium.onnx")
-
         audio_buffer = io.BytesIO()
         with wave.open(audio_buffer, mode="w") as wav_buffer_write_stream:
-            piper.synthesize(message.content, wav_buffer_write_stream)
+            self.piper_tts_models[PiperVoiceName.EN_US_JOHN_MEDIUM].synthesize(
+                message.content, wav_buffer_write_stream
+            )
 
         speech_audio_data = audio_buffer.getvalue()
 
