@@ -1,6 +1,10 @@
 # gpt4free / web scraping
 har_and_cookies
 
+# ONNX model files
+*.onnx
+*.onnx.json
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
