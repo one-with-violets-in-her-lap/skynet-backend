@@ -2,7 +2,6 @@ from datetime import datetime
 import logging
 from typing import Any, Callable
 
-from skynet_backend.api_clients.lazypy.models import LazypyVoice
 from skynet_backend.core.models.llm_conversation import (
     ConversationParticipantModelName,
     LlmConversationMessage,
@@ -42,11 +41,6 @@ class LlmConversationService:
 
         current_model_talking: ConversationParticipantModelName = "model-1"
 
-        models_voices: dict[ConversationParticipantModelName, LazypyVoice] = {
-            "model-1": LazypyVoice.EN_UK_003,
-            "model-2": LazypyVoice.EN_US_010,
-        }
-
         models_message_histories: dict[
             ConversationParticipantModelName, list[LlmMessage]
         ] = {
@@ -67,7 +61,7 @@ class LlmConversationService:
 
             new_message = await self.llm_speech_service.get_llm_speech_reply(
                 current_model_message_history,
-                text_to_speech_voice=models_voices[current_model_talking],
+                talking_model_name=current_model_talking,
             )
 
             new_llm_conversation_message = LlmConversationMessage(

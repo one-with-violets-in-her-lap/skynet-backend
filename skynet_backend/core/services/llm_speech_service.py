@@ -1,10 +1,10 @@
 import logging
 import g4f
-import httpx
+import timeit
 
-from skynet_backend.api_clients.lazypy.client import LazypyTextToSpeechClient
-from skynet_backend.api_clients.lazypy.models import LazypyVoice
+from skynet_backend.api_clients.responsive_voice.client import ResponsiveVoiceClient
 from skynet_backend.common_errors import ExternalApiError
+from skynet_backend.core.models.llm_conversation import ConversationParticipantModelName
 from skynet_backend.core.models.llm_message import LlmMessage, LlmMessageWithSpeech
 
 
@@ -15,15 +15,15 @@ class LlmSpeechService:
     def __init__(
         self,
         g4f_client: g4f.AsyncClient,
-        lazypy_text_to_speech_client: LazypyTextToSpeechClient,
+        responsive_voice_client: ResponsiveVoiceClient,
     ):
         self.g4f_client = g4f_client
-        self.lazypy_text_to_speech_client = lazypy_text_to_speech_client
+        self.responsive_voice_client = responsive_voice_client
 
     async def get_llm_speech_reply(
         self,
         message_history: list[LlmMessage],
-        text_to_speech_voice=LazypyVoice.EN_UK_003,
+        talking_model_name: ConversationParticipantModelName,
     ):
         response = await self.g4f_client.chat.completions.create(
             model="gpt-4o-mini",
@@ -40,16 +40,19 @@ class LlmSpeechService:
 
         logger.debug("LLM response is %s chars long", len(message.content))
 
-        text_to_speech_result = (
-            await self.lazypy_text_to_speech_client.fetch_speech_from_text(
-                message.content, voice=text_to_speech_voice
-            )
+        text_to_speech_start_time_seconds = timeit.default_timer()
+
+        speech_audio_data = await self.responsive_voice_client.fetch_speech_from_text(
+            message.content,
+            gender="female" if talking_model_name == "model-1" else "male",
         )
 
-        logger.info("Text to speech operation completed, fetching audio data...")
+        seconds_spent_on_text_to_speech = (
+            timeit.default_timer() - text_to_speech_start_time_seconds
+        )
 
-        speech_audio_data = await self._fetch_speech_audio_data(
-            text_to_speech_result.audio_url
+        logger.info(
+            "TTS API request took %s seconds", f"{seconds_spent_on_text_to_speech:.2f}"
         )
 
         return LlmMessageWithSpeech(
@@ -57,15 +60,3 @@ class LlmSpeechService:
             content=message.content,
             speech_audio_data=speech_audio_data,
         )
-
-    async def _fetch_speech_audio_data(self, audio_file_url: str):
-        async with httpx.AsyncClient() as httpx_client:
-            response = await httpx_client.get(audio_file_url)
-
-            if response.is_error:
-                raise ExternalApiError(
-                    status_code=response.status_code,
-                    detail="Failed to fetch speech audio data from lazypy API",
-                )
-
-            return response.read()
