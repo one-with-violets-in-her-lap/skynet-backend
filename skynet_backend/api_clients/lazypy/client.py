@@ -4,6 +4,7 @@ import urllib.parse
 import httpx
 import urllib
 
+from skynet_backend.api_clients.fake_user_agent import FAKE_USER_AGENT
 from skynet_backend.api_clients.lazypy.models import (
     LazypyTextToSpeechResult,
     LazypyTextToSpeechSuccessResult,
@@ -12,7 +13,6 @@ from skynet_backend.api_clients.lazypy.models import (
 from skynet_backend.common_errors import ExternalApiError
 
 
-_FAKE_USER_AGENT = "Mozilla/5.0 (Android 4.4; Tablet; rv:41.0) Gecko/41.0 Firefox/41.0"
 _LAZYPY_API_BASE_URL = "https://lazypy.ro"
 _DEFAULT_ERROR_MESSAGE = (
     "Something went wrong while generating speech from text using lazypy.ro API"
@@ -49,7 +49,7 @@ class LazypyTextToSpeechClient:
                 "Content-Type": "application/x-www-form-urlencoded",
                 "Origin": _LAZYPY_API_BASE_URL,
                 "Referer": _LAZYPY_API_BASE_URL,
-                "User-agent": _FAKE_USER_AGENT,
+                "User-agent": FAKE_USER_AGENT,
             },
             content=form_urlencoded_body,
             timeout=24,
