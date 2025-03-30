@@ -5,28 +5,20 @@ from typing import Any, Callable
 from skynet_backend.core.models.llm_conversation import (
     ConversationParticipantModelName,
     LlmConversationMessage,
+    LlmConversationPreferences,
     get_opposite_model_name,
 )
 from skynet_backend.core.models.llm_message import LlmMessage
 from skynet_backend.core.services.llm_speech_service import LlmSpeechService
-
-
-MASTER_PROMPT = LlmMessage(
-    role="system",
-    content="""
-    Do not ask "Can I help you with something other?" or similar questions. Try to
-    maintain the conversation proactively. Also find random topics to talk about.
-    """,
+from skynet_backend.core.utils.llm_conversation_message_builder import (
+    get_master_prompt,
+    inject_additional_instructions_in_message,
 )
 
-MASTER_PROMPT_EACH_MESSAGE_REMINDER = (
-    "Keep your answer short, around 20 words is enough"
-)
 
 ENTRYPOINT_MESSAGE = LlmMessage(
     role="user",
-    content="Greet me, ask me how I am doing and let's talk about something. "
-    + MASTER_PROMPT_EACH_MESSAGE_REMINDER,
+    content="Greet me, ask me how I am doing and let's talk about something.",
 )
 
 
@@ -40,17 +32,23 @@ class LlmConversationService:
     async def start_llm_conversation(
         self,
         handle_new_message: Callable[[LlmConversationMessage], Any],
+        preferences: LlmConversationPreferences = LlmConversationPreferences(),
         max_conversation_messages_count=10,
     ):
         conversation_id = round(datetime.now().timestamp())
 
         current_model_talking: ConversationParticipantModelName = "model-1"
 
+        master_prompt = get_master_prompt(preferences)
+        processed_entrypoint_message = inject_additional_instructions_in_message(
+            ENTRYPOINT_MESSAGE
+        )
+
         models_message_histories: dict[
             ConversationParticipantModelName, list[LlmMessage]
         ] = {
-            "model-1": [MASTER_PROMPT, ENTRYPOINT_MESSAGE],
-            "model-2": [MASTER_PROMPT],
+            "model-1": [master_prompt, processed_entrypoint_message],
+            "model-2": [master_prompt],
         }
 
         logger.info("<%s> AI conversation started", conversation_id)
@@ -90,11 +88,11 @@ class LlmConversationService:
             models_message_histories[next_model_that_replies].append(
                 # Puts AI model response in other model's message history as a
                 # user message
-                LlmMessage(
-                    role="user",
-                    content=new_message.content
-                    + " "
-                    + MASTER_PROMPT_EACH_MESSAGE_REMINDER,
+                inject_additional_instructions_in_message(
+                    LlmMessage(
+                        role="user",
+                        content=new_message.content,
+                    )
                 )
             )
 
