@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 
 @handle_and_send_errors_to_socketio_client
-async def handle_start_llm_conversation(connection_id: str, data: str):
+async def handle_start_llm_conversation(connection_id: str, data):
     preferences = validate_event_data(data, LlmConversationPreferences)
 
     api_dependencies = await get_api_dependencies_for_connection(connection_id)
