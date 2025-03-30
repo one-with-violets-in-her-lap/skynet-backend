@@ -9,12 +9,12 @@ PydanticObjectT = TypeVar("PydanticObjectT", bound=BaseModel)
 
 
 def validate_and_get_event_data(
-    event_data: str | dict, pydantic_model_type: type[PydanticObjectT]
+    event_data, pydantic_model_type: type[PydanticObjectT]
 ) -> PydanticObjectT:
-    try:
-        if isinstance(event_data, dict):
+    if isinstance(event_data, dict):
+        try:
             return pydantic_model_type.model_validate(event_data)
-        elif isinstance(event_data, str):
-            return pydantic_model_type.model_validate_json(event_data)
-    except ValidationError as validation_error:
-        raise EventDataValidationError(str(validation_error)) from validation_error
+        except ValidationError as validation_error:
+            raise EventDataValidationError(str(validation_error)) from validation_error
+    else:
+        raise EventDataValidationError("Event data must be a JSON object ({ ... })")
