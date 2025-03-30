@@ -8,7 +8,7 @@ from skynet_backend.websockets_api.utils.errors import EventDataValidationError
 PydanticObjectT = TypeVar("PydanticObjectT", bound=BaseModel)
 
 
-def validate_event_data(
+def validate_and_get_event_data(
     event_data: str | dict, pydantic_model_type: type[PydanticObjectT]
 ) -> PydanticObjectT:
     try:

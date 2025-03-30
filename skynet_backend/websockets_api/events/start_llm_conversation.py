@@ -12,7 +12,7 @@ from skynet_backend.websockets_api.error_handling import (
 )
 from skynet_backend.websockets_api.socketio_server import socketio_server
 from skynet_backend.websockets_api.utils.event_data_validation import (
-    validate_event_data,
+    validate_and_get_event_data,
 )
 
 
@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 @handle_and_send_errors_to_socketio_client
 async def handle_start_llm_conversation(connection_id: str, data):
-    preferences = validate_event_data(data, LlmConversationPreferences)
+    preferences = validate_and_get_event_data(data, LlmConversationPreferences)
 
     api_dependencies = await get_api_dependencies_for_connection(connection_id)
 
