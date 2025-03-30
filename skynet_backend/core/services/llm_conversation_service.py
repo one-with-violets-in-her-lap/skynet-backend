@@ -11,17 +11,22 @@ from skynet_backend.core.models.llm_message import LlmMessage
 from skynet_backend.core.services.llm_speech_service import LlmSpeechService
 
 
-ENTRYPOINT_MESSAGE = LlmMessage(
-    role="user",
-    content="Greet me, ask me how I am doing and let's talk about something",
-)
-
 MASTER_PROMPT = LlmMessage(
     role="system",
-    content='Do not ask "Can I help you with something other?" or similar '
-    + "questions. Try to maintain the conversation proactively. Also find "
-    + "random topics to talk about. And "
-    + "respond in short form, no more than 20 words.",
+    content="""
+    Do not ask "Can I help you with something other?" or similar questions. Try to
+    maintain the conversation proactively. Also find random topics to talk about.
+    """,
+)
+
+MASTER_PROMPT_EACH_MESSAGE_REMINDER = (
+    "Keep your answer short, around 20 words is enough"
+)
+
+ENTRYPOINT_MESSAGE = LlmMessage(
+    role="user",
+    content="Greet me, ask me how I am doing and let's talk about something. "
+    + MASTER_PROMPT_EACH_MESSAGE_REMINDER,
 )
 
 
@@ -85,7 +90,12 @@ class LlmConversationService:
             models_message_histories[next_model_that_replies].append(
                 # Puts AI model response in other model's message history as a
                 # user message
-                LlmMessage(role="user", content=new_message.content)
+                LlmMessage(
+                    role="user",
+                    content=new_message.content
+                    + " "
+                    + MASTER_PROMPT_EACH_MESSAGE_REMINDER,
+                )
             )
 
             current_model_talking = next_model_that_replies
