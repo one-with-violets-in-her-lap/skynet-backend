@@ -23,3 +23,8 @@ class WebsocketsApiUnknownError(WebsocketsApiError):
 
     def __init__(self):
         super().__init__("unknown-error", "An unknown error occurred")
+
+
+class EventDataValidationError(WebsocketsApiError):
+    def __init__(self, detail: str):
+        super().__init__("validation-error", detail)
