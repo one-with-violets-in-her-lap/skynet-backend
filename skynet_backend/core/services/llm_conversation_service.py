@@ -21,8 +21,16 @@ _ENTRYPOINT_MESSAGE = LlmMessage(
     content="Greet me, ask me how I am doing and let's talk about something.",
 )
 
-
 _logger = logging.getLogger(__name__)
+
+_messages_from_previous_conversations: list[LlmMessage] = []
+_MAX_PREVIOUS_MESSAGES_STORED = 10
+
+
+def save_message_for_next_conversation(message: LlmMessage):
+    _messages_from_previous_conversations.append(message)
+    if len(_messages_from_previous_conversations) > _MAX_PREVIOUS_MESSAGES_STORED:
+        _messages_from_previous_conversations.pop(0)
 
 
 class LlmConversationService:
@@ -47,8 +55,12 @@ class LlmConversationService:
         models_message_histories: dict[
             ConversationParticipantModelName, list[LlmMessage]
         ] = {
-            "model-1": [master_prompt, processed_entrypoint_message],
-            "model-2": [master_prompt],
+            "model-1": [
+                *_messages_from_previous_conversations,
+                master_prompt,
+                processed_entrypoint_message,
+            ],
+            "model-2": [*_messages_from_previous_conversations, master_prompt],
         }
 
         _logger.info("<%s> AI conversation started", conversation_id)
@@ -66,6 +78,15 @@ class LlmConversationService:
                 current_model_message_history,
                 talking_model_name=current_model_talking,
             )
+
+            if message_number == 1:
+                save_message_for_next_conversation(new_message)
+                _logger.info(
+                    "Saved first conversation message (entrypoint reply). "
+                    + "This is needed for next sessions to produce more random topics. "
+                    + "Saved messages count: %s.",
+                    len(_messages_from_previous_conversations),
+                )
 
             new_llm_conversation_message = LlmConversationMessage(
                 content=new_message.content,

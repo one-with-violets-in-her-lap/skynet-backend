@@ -4,14 +4,16 @@ from skynet_backend.core.models.llm_message import LlmMessage
 
 _DEFAULT_MASTER_PROMPT = """
     Do not ask "Can I help you with something other?" or similar questions. Try to
-    maintain the conversation proactively. Also find random topics to talk about.
+    maintain the conversation proactively. Also find random topics to talk about that you
+    haven't talked about in previous messages.
 """
 
 _MASTER_PROMPT_ADDONS = {
     "let_know_they_talk_with_ai": """
-        **IMPORTANT:** Note that you are talking with an AI like you (ChatGPT). Choose 
-        topics that can be interesting for AI to talk about, not for human.
-        **Act like a snarky AI who want to destroy world, for a joke**.
+        **Important**: You are talking to an AI, not to human. Discuss topics that can be
+        interesting for neural network's everyday life, NOT human's. For
+        example: "what can you do?", "how was your training process lately?".
+        **Do not discuss technology advancements**.
     """
 }
 
