@@ -16,13 +16,13 @@ from skynet_backend.core.utils.llm_conversation_message_builder import (
 )
 
 
-ENTRYPOINT_MESSAGE = LlmMessage(
+_ENTRYPOINT_MESSAGE = LlmMessage(
     role="user",
     content="Greet me, ask me how I am doing and let's talk about something.",
 )
 
 
-logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 
 
 class LlmConversationService:
@@ -41,7 +41,7 @@ class LlmConversationService:
 
         master_prompt = get_master_prompt(preferences)
         processed_entrypoint_message = inject_additional_instructions_in_message(
-            ENTRYPOINT_MESSAGE
+            _ENTRYPOINT_MESSAGE
         )
 
         models_message_histories: dict[
@@ -51,10 +51,10 @@ class LlmConversationService:
             "model-2": [master_prompt],
         }
 
-        logger.info("<%s> AI conversation started", conversation_id)
+        _logger.info("<%s> AI conversation started", conversation_id)
 
         for message_number in range(1, max_conversation_messages_count + 1):
-            logger.info(
+            _logger.info(
                 "<%s> Model %s is talking", conversation_id, str(current_model_talking)
             )
 
@@ -74,7 +74,7 @@ class LlmConversationService:
             )
             await handle_new_message(new_llm_conversation_message)
 
-            logger.info(
+            _logger.info(
                 '<%s> Model %s said (message %s): "%s"',
                 conversation_id,
                 current_model_talking,
@@ -98,4 +98,4 @@ class LlmConversationService:
 
             current_model_talking = next_model_that_replies
 
-        logger.info("<%s> Conversation finished", conversation_id)
+        _logger.info("<%s> Conversation finished", conversation_id)
