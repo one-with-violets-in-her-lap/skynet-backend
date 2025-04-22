@@ -36,6 +36,9 @@ class LlmSpeechService:
                 detail="LLM API response is empty (no choices " + "with completions)"
             )
 
+        logger.info(
+            "LLM responses: %s", [llm_response.message for llm_response in response.choices]
+        )
         message = response.choices[0].message
 
         logger.debug("LLM response is %s chars long", len(message.content))
