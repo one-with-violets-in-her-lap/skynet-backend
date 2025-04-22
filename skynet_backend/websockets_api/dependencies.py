@@ -6,7 +6,7 @@ from typing import AsyncContextManager
 
 import g4f
 
-from skynet_backend.api_clients.responsive_voice.client import ResponsiveVoiceClient
+from skynet_backend.common.api_clients.responsive_voice.client import ResponsiveVoiceClient
 from skynet_backend.core.services.llm_conversation_service import LlmConversationService
 from skynet_backend.core.services.llm_speech_service import LlmSpeechService
 from skynet_backend.websockets_api.socketio_server import socketio_server
