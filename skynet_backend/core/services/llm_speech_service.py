@@ -2,8 +2,8 @@ import logging
 import g4f
 import timeit
 
-from skynet_backend.api_clients.responsive_voice.client import ResponsiveVoiceClient
-from skynet_backend.common_errors import ExternalApiError
+from skynet_backend.common.api_clients.responsive_voice.client import ResponsiveVoiceClient
+from skynet_backend.common.errors import ExternalApiError
 from skynet_backend.core.models.llm_conversation import ConversationParticipantModelName
 from skynet_backend.core.models.llm_message import LlmMessage, LlmMessageWithSpeech
 

@@ -4,13 +4,13 @@ import urllib.parse
 import httpx
 import urllib
 
-from skynet_backend.api_clients.fake_user_agent import FAKE_USER_AGENT
-from skynet_backend.api_clients.lazypy.models import (
+from skynet_backend.common.api_clients.fake_user_agent import FAKE_USER_AGENT
+from skynet_backend.common.api_clients.lazypy.models import (
     LazypyTextToSpeechResult,
     LazypyTextToSpeechSuccessResult,
     LazypyVoice,
 )
-from skynet_backend.common_errors import ExternalApiError
+from skynet_backend.common.errors import ExternalApiError
 
 
 _LAZYPY_API_BASE_URL = "https://lazypy.ro"
