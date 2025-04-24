@@ -32,6 +32,7 @@ class LlmSpeechService:
             model="gpt-4o-mini",
             messages=[message.model_dump() for message in message_history],
             web_search=False,
+            cookies={}
         )
 
         if len(response.choices) < 1:
