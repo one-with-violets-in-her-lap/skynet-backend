@@ -2,11 +2,13 @@ import logging
 import timeit
 
 import g4f
+import g4f.Provider
 
 from skynet_backend.common.api_clients.responsive_voice.client import (
     ResponsiveVoiceClient,
 )
 from skynet_backend.common.errors import ExternalApiError
+from skynet_backend.common.g4f_ignoring_providers import RetryProviderWithIgnoring
 from skynet_backend.core.models.llm_conversation import ConversationParticipantModelName
 from skynet_backend.core.models.llm_message import LlmMessage, LlmMessageWithSpeech
 
@@ -30,9 +32,11 @@ class LlmSpeechService:
 
         response = await g4f_client.chat.completions.create(
             model="gpt-4o-mini",
+            provider=RetryProviderWithIgnoring(
+                ignored_providers=[g4f.Provider.Blackbox]
+            ),
             messages=[message.model_dump() for message in message_history],
             web_search=False,
-            cookies={}
         )
 
         if len(response.choices) < 1:

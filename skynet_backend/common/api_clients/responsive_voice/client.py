@@ -16,7 +16,7 @@ class ResponsiveVoiceClient:
             base_url=_RESPONSIVE_VOICE_API_BASE_URL,
             headers={"User-Agent": FAKE_USER_AGENT},
             transport=httpx_transport_with_retries,
-            timeout=15,
+            timeout=20,
         )
 
         return self
