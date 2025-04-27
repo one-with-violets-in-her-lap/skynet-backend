@@ -35,7 +35,7 @@ class LlmSpeechService:
         logger.info("Fetching LLM reply with proxy %s", proxy_url)
 
         response = await self.g4f_client.chat.completions.create(
-            model="deepseek-r1",
+            model="gpt-4o-mini",
             provider=RetryProviderWithIgnoring(
                 ignored_providers=[g4f.Provider.Blackbox]
             ),
