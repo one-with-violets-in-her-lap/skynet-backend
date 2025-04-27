@@ -1,5 +1,6 @@
 import logging
 import timeit
+from typing import Optional
 
 import g4f
 import g4f.Provider
@@ -20,21 +21,25 @@ class LlmSpeechService:
     def __init__(
         self,
         responsive_voice_client: ResponsiveVoiceClient,
+        g4f_client: g4f.AsyncClient,
     ):
         self.responsive_voice_client = responsive_voice_client
+        self.g4f_client = g4f_client
 
     async def get_llm_speech_reply(
         self,
         message_history: list[LlmMessage],
         talking_model_name: ConversationParticipantModelName,
+        proxy_url: Optional[str] = None,
     ):
-        g4f_client = g4f.AsyncClient()
+        logger.info('Fetching LLM reply with proxy %s', proxy_url)
 
-        response = await g4f_client.chat.completions.create(
-            model="gpt-4o-mini",
+        response = await self.g4f_client.chat.completions.create(
+            model="deepseek-r1",
             provider=RetryProviderWithIgnoring(
                 ignored_providers=[g4f.Provider.Blackbox]
             ),
+            proxy=proxy_url,
             messages=[message.model_dump() for message in message_history],
             web_search=False,
         )

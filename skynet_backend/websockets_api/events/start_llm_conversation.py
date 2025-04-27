@@ -7,6 +7,7 @@ from skynet_backend.core.models.llm_conversation import (
 from skynet_backend.websockets_api.dependencies import (
     get_api_dependencies_for_connection,
 )
+from skynet_backend.websockets_api.config import websockets_api_config
 from skynet_backend.websockets_api.error_handling import (
     handle_and_send_errors_to_socketio_client,
 )
@@ -39,7 +40,7 @@ async def handle_start_llm_conversation(connection_id: str, data):
 
     await api_dependencies.llm_conversation_service.start_llm_conversation(
         send_new_llm_message_to_client,
-        preferences,
+        proxy_url=websockets_api_config.proxy_url,
     )
 
     await socketio_server.emit("llm-conversation-end", to=connection_id)

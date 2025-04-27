@@ -1,6 +1,6 @@
 from datetime import datetime
 import logging
-from typing import Any, Callable
+from typing import Any, Callable, Optional
 
 from skynet_backend.core.models.llm_conversation import (
     ConversationParticipantModelName,
@@ -42,6 +42,7 @@ class LlmConversationService:
         handle_new_message: Callable[[LlmConversationMessage], Any],
         preferences: LlmConversationPreferences = LlmConversationPreferences(),
         max_conversation_messages_count=10,
+        proxy_url: Optional[str] = None,
     ):
         conversation_id = round(datetime.now().timestamp())
 
@@ -77,6 +78,7 @@ class LlmConversationService:
             new_message = await self.llm_speech_service.get_llm_speech_reply(
                 current_model_message_history,
                 talking_model_name=current_model_talking,
+                proxy_url=proxy_url,
             )
 
             if message_number == 1:

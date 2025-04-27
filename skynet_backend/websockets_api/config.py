@@ -1,3 +1,4 @@
+from typing import Optional
 import logging
 import os
 
@@ -20,6 +21,8 @@ class WebsocketsApiConfig(BaseSettings):
 
     host: str = "0.0.0.0"
     port: int = 8000
+
+    proxy_url: Optional[str] = None
 
     cors_allowed_origins: list[str]
 
