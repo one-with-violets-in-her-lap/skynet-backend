@@ -39,7 +39,8 @@ async def handle_start_llm_conversation(connection_id: str, data):
     logger.info("LLM conversation start event with sid: %s", connection_id)
 
     await api_dependencies.llm_conversation_service.start_llm_conversation(
-        send_new_llm_message_to_client,
+        handle_new_message=send_new_llm_message_to_client,
+        preferences=preferences,
         proxy_url=websockets_api_config.proxy_url,
     )
 

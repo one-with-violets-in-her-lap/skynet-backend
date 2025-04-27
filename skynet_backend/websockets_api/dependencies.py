@@ -32,8 +32,7 @@ async def initialize_api_dependencies_in_socketio_session(connection_id: str, *_
     responsive_voice_client = ResponsiveVoiceClient()
 
     llm_speech_service = LlmSpeechService(
-        responsive_voice_client=responsive_voice_client,
-        g4f_client=g4f.AsyncClient()
+        responsive_voice_client=responsive_voice_client, g4f_client=g4f.AsyncClient()
     )
 
     llm_conversation_service = LlmConversationService(llm_speech_service)

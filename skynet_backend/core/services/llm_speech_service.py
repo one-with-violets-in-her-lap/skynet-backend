@@ -32,7 +32,7 @@ class LlmSpeechService:
         talking_model_name: ConversationParticipantModelName,
         proxy_url: Optional[str] = None,
     ):
-        logger.info('Fetching LLM reply with proxy %s', proxy_url)
+        logger.info("Fetching LLM reply with proxy %s", proxy_url)
 
         response = await self.g4f_client.chat.completions.create(
             model="deepseek-r1",
