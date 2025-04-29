@@ -10,7 +10,7 @@ websockets-api = "skynet_backend.websockets_api.main:main"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-g4f = "^0.5.0.1"
+g4f = {extras = ["all"], version = "^0.5.2.0"}
 pydantic-settings = "^2.8.1"
 pydantic = "^2.10.6"
 python-socketio = {extras = ["asyncio"], version = "^5.12.1"}
