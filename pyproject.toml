@@ -15,6 +15,7 @@ pydantic = "^2.10.6"
 python-socketio = {extras = ["asyncio"], version = "^5.12.1"}
 uvicorn = "^0.34.0"
 httpx = {extras = ["socks"], version = "^0.28.1"}
+asgi-ratelimit = "^0.10.0"
 
 
 [tool.poetry.group.dev.dependencies]
