@@ -34,22 +34,6 @@ test = ["anyio[trio]", "coverage[toml] (>=7)", "exceptiongroup (>=1.2.0)", "hypo
 trio = ["trio (>=0.26.1)"]
 
 [[package]]
-name = "asgi-ratelimit"
-version = "0.10.0"
-description = ""
-optional = false
-python-versions = ">=3.6,<4.0"
-files = [
-    {file = "asgi_ratelimit-0.10.0-py3-none-any.whl", hash = "sha256:7618356839242270e3c826c2b20f5a4c3184851b6a0ec61de0eff76eedcb0839"},
-    {file = "asgi_ratelimit-0.10.0.tar.gz", hash = "sha256:f45197f93db7713c8c0ec7bd6a5d0ffc36ed9beb90f54a389b683abdfcce8d5d"},
-]
-
-[package.extras]
-full = ["pyjwt (>=1.7.1,<2.0.0)", "redis (>=4.2.0rc2)"]
-jwt = ["pyjwt (>=1.7.1,<2.0.0)"]
-redis = ["redis (>=4.2.0rc2)"]
-
-[[package]]
 name = "astroid"
 version = "3.3.8"
 description = "An abstract syntax tree for Python with inference support."
@@ -704,4 +688,4 @@ h11 = ">=0.9.0,<1"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "17b3026d9831b1caf890177aab57c723a3ecfbda99ec31a39d880ff1d84f992a"
+content-hash = "a67fc99e85d54deb74fa7d746c5c3f2eec4cc3424ecc9b69c644327d9b695f8d"

@@ -26,8 +26,6 @@ class WebsocketsApiConfig(BaseSettings):
 
     cors_allowed_origins: list[str]
 
-    enable_rate_limiting: bool = True
-
     @staticmethod
     def load_from_env():
         return WebsocketsApiConfig.model_validate({})
