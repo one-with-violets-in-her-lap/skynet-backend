@@ -4,14 +4,14 @@ from dataclasses import dataclass
 import logging
 from typing import AsyncContextManager
 
-import g4f
-
+from skynet_backend.common.api_clients.deepai_client import DeepaiClient
 from skynet_backend.common.api_clients.responsive_voice.client import (
     ResponsiveVoiceClient,
 )
 from skynet_backend.core.services.llm_conversation_service import LlmConversationService
 from skynet_backend.core.services.llm_speech_service import LlmSpeechService
 from skynet_backend.websockets_api.socketio_server import socketio_server
+from skynet_backend.websockets_api.config import websockets_api_config
 
 
 logger = logging.getLogger(__name__)
@@ -30,9 +30,10 @@ async def get_api_dependencies_for_connection(connection_id: str) -> ApiDependen
 
 async def initialize_api_dependencies_in_socketio_session(connection_id: str, *_):
     responsive_voice_client = ResponsiveVoiceClient()
+    deepai_client = DeepaiClient(proxy_url=websockets_api_config.proxy_url)
 
     llm_speech_service = LlmSpeechService(
-        responsive_voice_client=responsive_voice_client, g4f_client=g4f.AsyncClient()
+        responsive_voice_client=responsive_voice_client, deepai_client=deepai_client
     )
 
     llm_conversation_service = LlmConversationService(llm_speech_service)
@@ -41,6 +42,7 @@ async def initialize_api_dependencies_in_socketio_session(connection_id: str, *_
 
     dependencies_with_context_managers: list[AsyncContextManager] = [
         responsive_voice_client,
+        deepai_client,
     ]
 
     # TODO: rewrite with async `ExitStack``
