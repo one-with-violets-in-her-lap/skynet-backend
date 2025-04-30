@@ -9,7 +9,6 @@ import socketio
 from skynet_backend.websockets_api.events import register_socketio_events
 from skynet_backend.websockets_api.config import websockets_api_config
 from skynet_backend.websockets_api.socketio_server import socketio_server
-from skynet_backend.websockets_api.config import websockets_api_config
 
 
 def main():
@@ -39,7 +38,7 @@ def main():
         )
 
     root_logger.info("Starting Socket.io server via uvicorn")
-    
+
     uvicorn.run(
         socketio_asgi_app,
         host=websockets_api_config.host,
