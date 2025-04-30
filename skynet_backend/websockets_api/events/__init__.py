@@ -1,6 +1,6 @@
 import socketio
 
-from skynet_backend.websockets_api.dependencies import (
+from skynet_backend.websockets_api.utils.dependencies import (
     close_resources_on_socketio_disconnect,
     initialize_api_dependencies_in_socketio_session,
 )
