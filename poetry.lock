@@ -256,6 +256,17 @@ colors = ["colorama"]
 plugins = ["setuptools"]
 
 [[package]]
+name = "keylimiter"
+version = "0.1.5"
+description = "Thread-safe rate limiter algorithms"
+optional = false
+python-versions = ">=3.8,<4.0"
+files = [
+    {file = "keylimiter-0.1.5-py3-none-any.whl", hash = "sha256:08d0f7b05133e3e2b7f7aab8e023a8881deb37ec213a3ff270d79876658ed2e5"},
+    {file = "keylimiter-0.1.5.tar.gz", hash = "sha256:6655240c15d1aee6acf26bd66bb1ae6c5dfd014e287f9c9c563dcfeacfc8fc81"},
+]
+
+[[package]]
 name = "mccabe"
 version = "0.7.0"
 description = "McCabe checker, plugin for flake8"
@@ -688,4 +699,4 @@ h11 = ">=0.9.0,<1"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "a67fc99e85d54deb74fa7d746c5c3f2eec4cc3424ecc9b69c644327d9b695f8d"
+content-hash = "92b078b78862985c84dd65a1138b5084ad928cc26f389ef71874bdd052a298e9"
