@@ -94,8 +94,8 @@ def socketio_ip_rate_limit(max_rate: int, period_in_milliseconds: int):
 
             try:
                 rate_limiter.try_acquire(ip_address)
-            except BucketFullException:
-                raise RateLimitedError()
+            except BucketFullException as bucket_full_error:
+                raise RateLimitedError() from bucket_full_error
 
             await event_handler_function(connection_id, session, data)
 
