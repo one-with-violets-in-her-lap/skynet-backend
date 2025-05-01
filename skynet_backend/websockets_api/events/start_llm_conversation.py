@@ -1,5 +1,7 @@
 import logging
 
+from pyrate_limiter import Duration, Rate
+
 from skynet_backend.core.models.llm_conversation import (
     LlmConversationMessage,
     LlmConversationPreferences,
@@ -20,7 +22,7 @@ logger = logging.getLogger(__name__)
 
 
 @socketio_event_handler
-@socketio_ip_rate_limit(max_rate=1, period_in_milliseconds=1000 * 60 * 60 * 24)
+@socketio_ip_rate_limit(Rate(limit=1, interval=Duration.DAY))
 async def handle_start_llm_conversation(
     connection_id: str, session: ApiSocketioSession, data
 ):

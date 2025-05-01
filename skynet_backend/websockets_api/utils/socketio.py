@@ -1,8 +1,19 @@
+from datetime import time
+import datetime
 from functools import wraps
 import logging
-from typing import Any, Callable
+from typing import Any, Awaitable, Callable
 
-from pyrate_limiter import BucketFullException, Limiter, Rate
+from pyrate_limiter import (
+    BucketFactory,
+    BucketFullException,
+    InMemoryBucket,
+    Limiter,
+    Rate,
+    TimeClock,
+)
+from pyrate_limiter.abstracts.bucket import AbstractBucket
+from pyrate_limiter.abstracts.rate import RateItem
 
 from skynet_backend.websockets_api.socketio_server import socketio_server
 from skynet_backend.websockets_api.utils.dependencies import (
@@ -76,14 +87,31 @@ def handle_and_send_errors_to_socketio_client(event_handler_function: Callable):
     return run_with_error_handling
 
 
-def socketio_ip_rate_limit(max_rate: int, period_in_milliseconds: int):
+class MultiBucketFactory(BucketFactory):
+    def __init__(self, max_rate: Rate):
+        self.clock = TimeClock()
+        self.max_rate = max_rate
+        self.buckets = {}
+
+    def wrap_item(self, name: str, weight: int = 1):
+        return RateItem(name, self.clock.now(), weight=weight)
+
+    def get(self, item: RateItem) -> AbstractBucket:
+        if item.name not in self.buckets:
+            new_bucket = self.create(self.clock, InMemoryBucket, rates=[self.max_rate])
+            self.buckets.update({item.name: new_bucket})
+
+        return self.buckets[item.name]
+
+
+def socketio_ip_rate_limit(max_rate: Rate):
     """
     Decorator for Socket.IO event handlers that controls how often can client trigger the
     handler. Identifies the client by an IP address
     """
 
     def create_rate_limit_decorator(event_handler_function: SocketioEventHandler):
-        rate_limiter = Limiter(Rate(limit=max_rate, interval=period_in_milliseconds))
+        rate_limiter = Limiter(MultiBucketFactory(max_rate))
 
         @wraps(event_handler_function)
         async def run_with_rate_limiting(
