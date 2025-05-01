@@ -14,6 +14,11 @@ class WebsocketsApiError(Exception):
         self.detail = detail
 
 
+class RateLimitedError(WebsocketsApiError):
+    def __init__(self):
+        super().__init__("rate-limited-error", "You are rate limited. Try again later")
+
+
 class WebsocketsApiUnknownError(WebsocketsApiError):
     """Generic Websockets API error
 

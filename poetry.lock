@@ -256,17 +256,6 @@ colors = ["colorama"]
 plugins = ["setuptools"]
 
 [[package]]
-name = "keylimiter"
-version = "0.1.5"
-description = "Thread-safe rate limiter algorithms"
-optional = false
-python-versions = ">=3.8,<4.0"
-files = [
-    {file = "keylimiter-0.1.5-py3-none-any.whl", hash = "sha256:08d0f7b05133e3e2b7f7aab8e023a8881deb37ec213a3ff270d79876658ed2e5"},
-    {file = "keylimiter-0.1.5.tar.gz", hash = "sha256:6655240c15d1aee6acf26bd66bb1ae6c5dfd014e287f9c9c563dcfeacfc8fc81"},
-]
-
-[[package]]
 name = "mccabe"
 version = "0.7.0"
 description = "McCabe checker, plugin for flake8"
@@ -508,6 +497,21 @@ spelling = ["pyenchant (>=3.2,<4.0)"]
 testutils = ["gitpython (>3)"]
 
 [[package]]
+name = "pyrate-limiter"
+version = "3.7.0"
+description = "Python Rate-Limiter using Leaky-Bucket Algorithm"
+optional = false
+python-versions = "<4.0,>=3.8"
+files = [
+    {file = "pyrate_limiter-3.7.0-py3-none-any.whl", hash = "sha256:cdbfc8f537d07e2bda76f5191b38aee972b26e1af020d880e3c1ef9d528227ac"},
+    {file = "pyrate_limiter-3.7.0.tar.gz", hash = "sha256:dc1e6d2c80b559f3333cb44bd822bd558f5a47946dc50cce4263a9c1c5fd8067"},
+]
+
+[package.extras]
+all = ["filelock (>=3.0)", "psycopg[pool] (>=3.1.18,<4.0.0)", "redis (>=5.0.0,<6.0.0)"]
+docs = ["furo (>=2022.3.4,<2023.0.0)", "myst-parser (>=0.17)", "sphinx (>=4.3.0,<5.0.0)", "sphinx-autodoc-typehints (>=1.17,<2.0)", "sphinx-copybutton (>=0.5)", "sphinxcontrib-apidoc (>=0.3,<0.4)"]
+
+[[package]]
 name = "python-dotenv"
 version = "1.0.1"
 description = "Read key-value pairs from a .env file and set them as environment variables"
@@ -699,4 +703,4 @@ h11 = ">=0.9.0,<1"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "92b078b78862985c84dd65a1138b5084ad928cc26f389ef71874bdd052a298e9"
+content-hash = "1f4fc340963f51c1eb6f59bb08ba936f7aa01b66e6ec4432eeb334346be0045f"

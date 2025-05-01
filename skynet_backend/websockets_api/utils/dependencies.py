@@ -63,11 +63,13 @@ class ApiSocketioSession(TypedDict):
 async def initialize_api_dependencies_in_socketio_session(
     connection_id: str, environment
 ):
+    logger.info("Socketio environment: %s", environment)
+
     dependencies = ApiDependencies()
     await dependencies.__aenter__()
 
     session: ApiSocketioSession = {
-        "client_ip_address": environment["client"][0],
+        "client_ip_address": environment["asgi.scope"]["client"][0],
         "dependencies": dependencies,
     }
 
@@ -87,7 +89,7 @@ async def close_resources_on_socketio_disconnect(connection_id: str, _):
 
     session: ApiSocketioSession = await socketio_server.get_session(connection_id)
 
-    session["dependencies"].__aexit__()
+    await session["dependencies"].__aexit__()
 
 
 async def get_socketio_api_session(connection_id: str) -> ApiSocketioSession:
