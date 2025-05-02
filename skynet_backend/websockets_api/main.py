@@ -21,6 +21,7 @@ def main():
     register_socketio_events(socketio_server)
 
     root_logger.info("Starting Socket.io server via uvicorn")
+
     uvicorn.run(
         socketio.ASGIApp(
             socketio_server,
