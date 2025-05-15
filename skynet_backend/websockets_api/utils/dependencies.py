@@ -26,16 +26,14 @@ class ApiDependencies(AsyncContextManager):
     """
 
     def __init__(self):
-        self.deepai_client = DeepaiClient(websockets_api_config.proxy_url)
         self.responsive_voice_client = ResponsiveVoiceClient()
 
         self.llm_speech_service = LlmSpeechService(
-            self.responsive_voice_client, self.deepai_client
+            self.responsive_voice_client
         )
         self.llm_conversation_service = LlmConversationService(self.llm_speech_service)
 
         self.context_managers: list[AsyncContextManager] = [
-            self.deepai_client,
             self.responsive_voice_client,
         ]
 

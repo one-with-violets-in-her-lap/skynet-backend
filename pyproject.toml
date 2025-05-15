@@ -16,6 +16,7 @@ python-socketio = {extras = ["asyncio"], version = "^5.12.1"}
 uvicorn = "^0.34.0"
 httpx = {extras = ["socks"], version = "^0.28.1"}
 pyrate-limiter = "^3.7.0"
+open-minded = "^0.1.5"
 
 
 [tool.poetry.group.dev.dependencies]
