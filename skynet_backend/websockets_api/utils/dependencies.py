@@ -28,9 +28,7 @@ class ApiDependencies(AsyncContextManager):
     def __init__(self):
         self.responsive_voice_client = ResponsiveVoiceClient()
 
-        self.llm_speech_service = LlmSpeechService(
-            self.responsive_voice_client
-        )
+        self.llm_speech_service = LlmSpeechService(self.responsive_voice_client)
         self.llm_conversation_service = LlmConversationService(self.llm_speech_service)
 
         self.context_managers: list[AsyncContextManager] = [
