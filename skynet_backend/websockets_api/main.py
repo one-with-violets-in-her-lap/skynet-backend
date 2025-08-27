@@ -1,11 +1,11 @@
 import logging
 
-import uvicorn
 import socketio
+import uvicorn
 
+from skynet_backend.websockets_api.config import websockets_api_config
 from skynet_backend.websockets_api.events import register_socketio_events
 from skynet_backend.websockets_api.socketio_server import socketio_server
-from skynet_backend.websockets_api.config import websockets_api_config
 
 
 root_logger = logging.getLogger()
@@ -30,3 +30,7 @@ def main():
         host=websockets_api_config.host,
         port=websockets_api_config.port,
     )
+
+
+if __name__ == "__main__":
+    main()

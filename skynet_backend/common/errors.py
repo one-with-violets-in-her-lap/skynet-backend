@@ -15,3 +15,7 @@ class ExternalApiError(Exception):
 
         self.status_code = status_code
         self.detail = detail
+
+
+class NotFoundError(Exception):
+    pass
